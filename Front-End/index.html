@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hollow Mountains - Park Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+        }
+        
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        
+        .card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .attraction-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .maintenance-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-open {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        .status-in-progress {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-completed {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        
+        .login-bg {
+            background: url('https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center;
+            background-size: cover;
+            position: relative;
+        }
+        
+        .login-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Login Page (Default View) -->
+    <div id="login-page" class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md">
+            <div class="login-bg rounded-2xl shadow-xl overflow-hidden">
+                <div class="p-8 relative z-10">
+                    <div class="flex justify-center mb-8">
+                        <div class="bg-white p-4 rounded-full shadow-lg">
+                            <i class="fas fa-mountain-sun text-4xl text-indigo-600"></i>
+                        </div>
+                    </div>
+                    <h1 class="text-3xl font-bold text-center text-white mb-2">Hollow Mountains</h1>
+                    <p class="text-center text-indigo-200 mb-8">Park Management System</p>
+                    
+                    <form id="login-form" class="space-y-6">
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-white mb-1">Email</label>
+                            <input type="email" id="email" name="email" required 
+                                   class="w-full px-4 py-2 rounded-lg bg-white bg-opacity-90 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-white mb-1">Password</label>
+                            <input type="password" id="password" name="password" required 
+                                   class="w-full px-4 py-2 rounded-lg bg-white bg-opacity-90 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <button type="submit" 
+                                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+                                Sign In
+                            </button>
+                        </div>
+						<div id="login-error" class="hidden mt-2 text-sm text-red-200"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard (Hidden by default) -->
+    <div id="dashboard" class="hidden min-h-screen flex">
+        <!-- Sidebar -->
+        <div class="sidebar w-64 bg-white shadow-lg">
+            <div class="p-4 flex items-center space-x-3 border-b border-gray-200">
+                <div class="bg-indigo-100 p-2 rounded-full">
+                    <i class="fas fa-mountain-sun text-indigo-600 text-xl"></i>
+                </div>
+                <h2 class="text-xl font-bold text-gray-800">Hollow Mountains</h2>
+            </div>
+            <div class="p-4">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                        <span class="text-indigo-600 font-medium" id="user-initials">AD</span>
+                    </div>
+                    <div>
+                        <p class="font-medium text-gray-800" id="user-name">Admin User</p>
+                        <p class="text-xs text-gray-500" id="user-role">Administrator</p>
+                    </div>
+                </div>
+                
+                <nav class="space-y-1">
+                    <a href="#" class="nav-item active" data-section="dashboard-home">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="attractions">
+                        <i class="fas fa-ferris-wheel"></i>
+                        <span>Attractions</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="maintenance">
+                        <i class="fas fa-tools"></i>
+                        <span>Maintenance</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="status">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Status Overview</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="personnel">
+                        <i class="fas fa-users"></i>
+                        <span>Personnel</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="reports">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Reports</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <!-- Header -->
+            <header class="dashboard-header text-white p-4 shadow-md">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-2xl font-bold" id="section-title">Dashboard</h1>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <button class="p-2 rounded-full hover:bg-white hover:bg-opacity-20">
+                                <i class="fas fa-bell"></i>
+                            </button>
+                            <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                        </div>
+                        <button id="logout-btn" class="flex items-center space-x-2 bg-white bg-opacity-20 hover:bg-opacity-30 px-3 py-1 rounded-lg transition">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <main class="p-6">
+                <!-- Dashboard Home -->
+                <div id="dashboard-home" class="section-content">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                        <div class="card bg-white rounded-lg p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-500">Total Attractions</p>
+                                    <h3 class="text-3xl font-bold text-indigo-600">24</h3>
+                                </div>
+                                <div class="bg-indigo-100 p-3 rounded-full">
+                                    <i class="fas fa-ferris-wheel text-indigo-600 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card bg-white rounded-lg p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-500">Active Maintenance</p>
+                                    <h3 class="text-3xl font-bold text-emerald-600">8</h3>
+                                </div>
+                                <div class="bg-emerald-100 p-3 rounded-full">
+                                    <i class="fas fa-tools text-emerald-600 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card bg-white rounded-lg p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-500">Personnel</p>
+                                    <h3 class="text-3xl font-bold text-amber-600">42</h3>
+                                </div>
+                                <div class="bg-amber-100 p-3 rounded-full">
+                                    <i class="fas fa-users text-amber-600 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card bg-white rounded-lg p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-500">Pending Tasks</p>
+                                    <h3 class="text-3xl font-bold text-red-600">5</h3>
+                                </div>
+                                <div class="bg-red-100 p-3 rounded-full">
+                                    <i class="fas fa-clipboard-list text-red-600 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <div class="lg:col-span-2 card bg-white rounded-lg p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-semibold text-gray-800">Recent Maintenance Tasks</h3>
+                                <a href="#" class="text-sm text-indigo-600 hover:underline">View All</a>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="maintenance-card p-4 rounded-lg">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="font-medium">Dragon Coaster - Monthly Check</h4>
+                                            <p class="text-sm text-gray-600">Assigned to: Dominik Bulla</p>
+                                        </div>
+                                        <span class="status-badge status-in-progress">In Progress</span>
+                                    </div>
+                                    <div class="mt-2 text-sm text-gray-700">
+                                        <p>Last updated: 2 hours ago</p>
+                                    </div>
+                                </div>
+                                <div class="maintenance-card p-4 rounded-lg">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="font-medium">Ferris Wheel - Lubrication</h4>
+                                            <p class="text-sm text-gray-600">Assigned to: Brasco Mazer</p>
+                                        </div>
+                                        <span class="status-badge status-completed">Completed</span>
+                                    </div>
+                                    <div class="mt-2 text-sm text-gray-700">
+                                        <p>Completed: Today, 10:45 AM</p>
+                                    </div>
+                                </div>
+                                <div class="maintenance-card p-4 rounded-lg">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="font-medium">Haunted House - Lighting Check</h4>
+                                            <p class="text-sm text-gray-600">Assigned to: Anwar Azarkan</p>
+                                        </div>
+                                        <span class="status-badge status-open">Pending</span>
+                                    </div>
+                                    <div class="mt-2 text-sm text-gray-700">
+                                        <p>Scheduled for: Tomorrow, 8:00 AM</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card bg-white rounded-lg p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-semibold text-gray-800">Quick Actions</h3>
+                            </div>
+                            <div class="space-y-3">
+                                <button class="w-full flex items-center space-x-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 p-3 rounded-lg transition">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span>Add New Attraction</span>
+                                </button>
+                                <button class="w-full flex items-center space-x-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 p-3 rounded-lg transition">
+                                    <i class="fas fa-calendar-plus"></i>
+                                    <span>Schedule Maintenance</span>
+                                </button>
+                                <button class="w-full flex items-center space-x-3 bg-amber-50 hover:bg-amber-100 text-amber-700 p-3 rounded-lg transition">
+                                    <i class="fas fa-user-plus"></i>
+                                    <span>Add Personnel</span>
+                                </button>
+                                <button class="w-full flex items-center space-x-3 bg-purple-50 hover:bg-purple-100 text-purple-700 p-3 rounded-lg transition">
+                                    <i class="fas fa-file-export"></i>
+                                    <span>Generate Report</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-white rounded-lg p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Recent Attractions</h3>
+                            <a href="#" class="text-sm text-indigo-600 hover:underline">View All</a>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="attraction-card p-4 rounded-lg">
+                                <div class="flex items-center space-x-3 mb-3">
+                                    <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-bolt text-indigo-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium">Dragon Coaster</h4>
+                                        <p class="text-xs text-gray-600">Roller Coaster</p>
+                                    </div>
+                                </div>
+                                <div class="text-sm text-gray-700">
+                                    <p><i class="fas fa-map-marker-alt text-indigo-500 mr-2"></i> Thrill Zone</p>
+                                    <p class="mt-1"><i class="fas fa-calendar-check text-emerald-500 mr-2"></i> Next maintenance: 15/06/2023</p>
+                                </div>
+                            </div>
+                            <div class="attraction-card p-4 rounded-lg">
+                                <div class="flex items-center space-x-3 mb-3">
+                                    <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-umbrella-beach text-indigo-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium">Ferris Wheel</h4>
+                                        <p class="text-xs text-gray-600">Family Ride</p>
+                                    </div>
+                                </div>
+                                <div class="text-sm text-gray-700">
+                                    <p><i class="fas fa-map-marker-alt text-indigo-500 mr-2"></i> Central Plaza</p>
+                                    <p class="mt-1"><i class="fas fa-calendar-check text-emerald-500 mr-2"></i> Next maintenance: 12/06/2023</p>
+                                </div>
+                            </div>
+                            <div class="attraction-card p-4 rounded-lg">
+                                <div class="flex items-center space-x-3 mb-3">
+                                    <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-ghost text-indigo-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium">Haunted House</h4>
+                                        <p class="text-xs text-gray-600">Dark Ride</p>
+                                    </div>
+                                </div>
+                                <div class="text-sm text-gray-700">
+                                    <p><i class="fas fa-map-marker-alt text-indigo-500 mr-2"></i> Spooky Alley</p>
+                                    <p class="mt-1"><i class="fas fa-calendar-check text-emerald-500 mr-2"></i> Next maintenance: 18/06/2023</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attractions Section -->
+                <div id="attractions" class="section-content hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Attractions Management</h2>
+                        <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+                            <i class="fas fa-plus"></i>
+                            <span>Add Attraction</span>
+                        </button>
+                    </div>
+
+                    <div class="card bg-white rounded-lg p-6 mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold">All Attractions</h3>
+                            <div class="flex space-x-2">
+                                <div class="relative">
+                                    <input type="text" placeholder="Search attractions..." class="pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                                </div>
+                                <select class="border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option>Filter by Type</option>
+                                    <option>Roller Coaster</option>
+                                    <option>Family Ride</option>
+                                    <option>Water Ride</option>
+                                    <option>Dark Ride</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned Technician</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Next Maintenance</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                                                    <i class="fas fa-bolt text-indigo-600"></i>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Dragon Coaster</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">Roller Coaster</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">Thrill Zone</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">Dominik Bulla</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">15/06/2023</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                                                    <i class="fas fa-umbrella-beach text-indigo-600"></i>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Ferris Wheel</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">Family Ride</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">Central Plaza</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">Brasco Mazer</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">12/06/2023</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                                                    <i class="fas fa-ghost text-indigo-600"></i>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Haunted House</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">Dark Ride</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">Spooky Alley</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">Anwar Azarkan</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">18/06/2023</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+				</div>
+			</main>
+		</div>
+	</div>
+
+	<script>
+			document.addEventListener('DOMContentLoaded', function () {
+			var loginForm = document.getElementById('login-form');
+			var loginPage = document.getElementById('login-page');
+			var dashboard = document.getElementById('dashboard');
+			var userNameEl = document.getElementById('user-name');
+			var userInitialsEl = document.getElementById('user-initials');
+			var sectionTitleEl = document.getElementById('section-title');
+			var logoutBtn = document.getElementById('logout-btn');
+			var loginErrorEl = document.getElementById('login-error');
+
+			// Backend API base (relative to project root on XAMPP)
+			var API_BASE = '../api';
+
+			var ROLE_PERMISSIONS = {
+				'Administrator': ['dashboard-home','attractions','maintenance','personnel','status','reports','settings'],
+				'Manager': ['dashboard-home','status','reports','personnel'],
+				'Medewerker': ['dashboard-home','status']
+			};
+
+			function show(element) { element.classList.remove('hidden'); }
+			function hide(element) { element.classList.add('hidden'); }
+
+			function getInitials(name) {
+				if (!name) return 'GU';
+				var parts = name.trim().split(/\s+|@/);
+				var a = parts[0] ? parts[0][0] : '';
+				var b = parts[1] ? parts[1][0] : '';
+				return (a + b || a || 'G').toUpperCase();
+			}
+
+			function applyRolePermissions(role) {
+				var allowedSections = ROLE_PERMISSIONS[role] || [];
+				var navItems = document.querySelectorAll('.nav-item');
+				var sections = document.querySelectorAll('.section-content');
+				// Hide all sections by default
+				sections.forEach(function (sec) { sec.classList.add('hidden'); });
+				// Toggle nav visibility based on permissions
+				navItems.forEach(function (item) {
+					var section = item.getAttribute('data-section');
+					if (!section) return;
+					if (allowedSections.indexOf(section) === -1) {
+						item.classList.add('hidden');
+					} else {
+						item.classList.remove('hidden');
+					}
+				});
+				// Show first allowed section
+				var first = allowedSections[0] || 'dashboard-home';
+				var firstEl = document.getElementById(first);
+				if (firstEl) firstEl.classList.remove('hidden');
+				// Mark active nav
+				navItems.forEach(function (i) { i.classList.remove('active'); });
+				var activeItem = document.querySelector('.nav-item[data-section="' + first + '"]');
+				if (activeItem) activeItem.classList.add('active');
+				if (sectionTitleEl && activeItem && activeItem.querySelector('span')) {
+					sectionTitleEl.textContent = activeItem.querySelector('span').textContent;
+				}
+			}
+
+			function finishLogin(user) {
+				userNameEl.textContent = user.name;
+				userInitialsEl.textContent = getInitials(user.name);
+				var roleEl = document.getElementById('user-role');
+				if (roleEl) roleEl.textContent = user.role;
+				applyRolePermissions(user.role);
+				hide(loginPage);
+				show(dashboard);
+				sessionStorage.setItem('hm_session_user', JSON.stringify(user));
+			}
+
+			if (loginForm) {
+				loginForm.addEventListener('submit', function (e) {
+					e.preventDefault();
+					if (loginErrorEl) { loginErrorEl.classList.add('hidden'); loginErrorEl.textContent = ''; }
+					var email = (document.getElementById('email').value || '').trim().toLowerCase();
+					var password = (document.getElementById('password').value || '').trim();
+					fetch(API_BASE + '/auth_login.php', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						credentials: 'include',
+						body: JSON.stringify({ email: email, password: password })
+					}).then(function (res) {
+						var ct = res.headers.get('content-type') || '';
+						var toJson = ct.indexOf('application/json') !== -1 ? res.json() : res.text().then(function (t) { throw new Error(t || 'Server returned non-JSON'); });
+						if (!res.ok) {
+							return toJson.then(function (d) { throw new Error((d && d.error) || 'Login failed'); });
+						}
+						return toJson;
+					}).then(function (data) {
+						finishLogin(data.user);
+					}).catch(function (err) {
+						if (loginErrorEl) {
+							loginErrorEl.textContent = err.message || 'Login mislukt';
+							loginErrorEl.classList.remove('hidden');
+						}
+					});
+				});
+			}
+
+			if (logoutBtn) {
+				logoutBtn.addEventListener('click', function () {
+					fetch(API_BASE + '/auth_logout.php', { method: 'POST', credentials: 'include' })
+						.finally(function () {
+							sessionStorage.removeItem('hm_session_user');
+							show(loginPage);
+							hide(dashboard);
+							document.querySelectorAll('.nav-item').forEach(function (i) { i.classList.remove('hidden', 'active'); });
+						});
+				});
+			}
+
+			var navItems = document.querySelectorAll('.nav-item');
+			var sections = document.querySelectorAll('.section-content');
+			navItems.forEach(function (item) {
+				item.addEventListener('click', function (e) {
+					e.preventDefault();
+					var target = item.getAttribute('data-section');
+					sections.forEach(function (sec) { sec.classList.add('hidden'); });
+					var targetEl = document.getElementById(target);
+					if (targetEl) targetEl.classList.remove('hidden');
+					navItems.forEach(function (i) { i.classList.remove('active'); });
+					item.classList.add('active');
+					if (sectionTitleEl) {
+						sectionTitleEl.textContent = item.querySelector('span') ? item.querySelector('span').textContent : 'Dashboard';
+					}
+				});
+			});
+
+			// Auto-login if session exists
+			// Try backend session first, fallback to front-end sessionStorage
+			fetch(API_BASE + '/auth_me.php', { method: 'GET', credentials: 'include' })
+				.then(function (res) { return res.json(); })
+				.then(function (data) {
+					if (data && data.user) {
+						finishLogin(data.user);
+						return;
+					}
+					var raw = sessionStorage.getItem('hm_session_user');
+					if (raw) {
+						var sessionUser = JSON.parse(raw);
+						if (sessionUser && sessionUser.email && sessionUser.role) {
+							finishLogin(sessionUser);
+						}
+					}
+				})
+				.catch(function () { /* ignore */ });
+		});
+	</script>
+</body>
+</html>
