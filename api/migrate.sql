@@ -9,7 +9,16 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR(190) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
   role ENUM('Administrator','Manager','Monteur','Medewerker') NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  phone VARCHAR(20) NULL,
+  address_street VARCHAR(255) NULL,
+  address_number VARCHAR(10) NULL,
+  address_city VARCHAR(100) NULL,
+  address_postal_code VARCHAR(10) NULL,
+  address_country VARCHAR(100) DEFAULT 'Nederland',
+  date_of_birth DATE NULL,
+  employee_id VARCHAR(50) NULL UNIQUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Attractions

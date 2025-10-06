@@ -10,7 +10,13 @@ $DB_USER = 'root';
 $DB_PASS = '';
 $DB_CHARSET = 'utf8mb4';
 
+// Configure session settings for better compatibility
 if (session_status() === PHP_SESSION_NONE) {
+	// Set session configuration
+	ini_set('session.cookie_httponly', '1');
+	ini_set('session.cookie_samesite', 'Lax');
+	ini_set('session.cookie_path', '/');
+	ini_set('session.cookie_domain', '');
 	session_start();
 }
 
@@ -79,6 +85,28 @@ function require_auth(): array {
 		json(['error' => 'Unauthorized'], 401);
 	}
 	return $user;
+}
+
+function require_role(array $allowed_roles): array {
+	$user = require_auth();
+	if (!in_array($user['role'], $allowed_roles, true)) {
+		json(['error' => 'Insufficient permissions'], 403);
+	}
+	return $user;
+}
+
+function require_manager_or_admin(): array {
+	return require_role(['Manager', 'Administrator']);
+}
+
+function require_admin(): array {
+	return require_role(['Administrator']);
+}
+
+function generate_employee_id(): string {
+	$prefix = 'HM';
+	$number = str_pad((string)rand(1000, 9999), 4, '0', STR_PAD_LEFT);
+	return $prefix . $number;
 }
 
 
