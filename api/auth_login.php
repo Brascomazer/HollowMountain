@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require __DIR__ . '/config.php';
+require_once __DIR__ . '/bootstrap_demo.php';
 
 require_method('POST');
 $payload = require_json();
