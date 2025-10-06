@@ -3,6 +3,7 @@ declare(strict_types=1);
 require __DIR__ . '/config.php';
 
 require_method('GET');
+$user = require_auth();
 
 $stmt = db()->query('SELECT id, name, location, type FROM attractions ORDER BY id DESC');
 $rows = $stmt->fetchAll();
