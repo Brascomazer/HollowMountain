@@ -87,6 +87,10 @@
     </style>
 </head>
 <body class="bg-gray-100">
+    <!-- Toast Notification -->
+    <div id="login-toast" class="hidden opacity-0 fixed top-5 left-1/2 -translate-x-1/2 transform bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-opacity duration-500">
+        Signed in successfully
+    </div>
     <!-- Login Page (Default View) -->
     <div id="login-page" class="min-h-screen flex items-center justify-center p-4">
         <div class="w-full max-w-md">
@@ -379,7 +383,7 @@
                 <div id="attractions" class="section-content hidden">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-gray-800">Attractions Management</h2>
-                        <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+                        <button id="btn-add-attraction" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
                             <i class="fas fa-plus"></i>
                             <span>Add Attraction</span>
                         </button>
@@ -404,7 +408,7 @@
                         </div>
 
                         <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
+                            <table class="min-w-full divide-y divide-gray-200" id="attractions-table">
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
@@ -415,91 +419,7 @@
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-                                                    <i class="fas fa-bolt text-indigo-600"></i>
-                                                </div>
-                                                <div class="ml-4">
-                                                    <div class="text-sm font-medium text-gray-900">Dragon Coaster</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">Roller Coaster</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">Thrill Zone</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">Dominik Bulla</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">15/06/2023</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
-                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-                                                    <i class="fas fa-umbrella-beach text-indigo-600"></i>
-                                                </div>
-                                                <div class="ml-4">
-                                                    <div class="text-sm font-medium text-gray-900">Ferris Wheel</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">Family Ride</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">Central Plaza</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">Brasco Mazer</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">12/06/2023</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
-                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-                                                    <i class="fas fa-ghost text-indigo-600"></i>
-                                                </div>
-                                                <div class="ml-4">
-                                                    <div class="text-sm font-medium text-gray-900">Haunted House</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">Dark Ride</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">Spooky Alley</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">Anwar Azarkan</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">18/06/2023</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
-                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
-                                        </td>
-                                    </tr>
+                                <tbody class="bg-white divide-y divide-gray-200" id="attractions-body">
                                 </tbody>
                             </table>
                         </div>
@@ -523,6 +443,22 @@
 
 			// Backend API base (absolute path on XAMPP)
 			var API_BASE = '/Hakathon/HollowMountain/api';
+			// If served from a non-PHP origin (like 127.0.0.1:5500), force Apache origin
+			if (location.port === '5500' || location.hostname === '127.0.0.1') {
+				API_BASE = 'http://localhost/Hakathon/HollowMountain/api';
+			}
+
+			function requestJson(path, opts) {
+				var options = Object.assign({ credentials: 'include' }, opts || {});
+				return fetch(API_BASE + path, options).then(function (res) {
+					var ct = res.headers.get('content-type') || '';
+					var toJson = ct.indexOf('application/json') !== -1 ? res.json() : res.text().then(function (t) { throw new Error(t || 'Server returned non-JSON'); });
+					if (!res.ok) {
+						return toJson.then(function (d) { throw new Error((d && d.error) || ('HTTP ' + res.status)); });
+					}
+					return toJson;
+				});
+			}
 
 			var ROLE_PERMISSIONS = {
 				'Administrator': ['dashboard-home','attractions','maintenance','personnel','status','reports','settings'],
@@ -570,6 +506,73 @@
 				}
 			}
 
+			function showToast(message) {
+				var toast = document.getElementById('login-toast');
+				if (!toast) return;
+				toast.textContent = message || 'Signed in successfully';
+				toast.classList.remove('hidden');
+				// allow layout to apply before removing opacity
+				requestAnimationFrame(function () {
+					toast.classList.remove('opacity-0');
+				});
+				setTimeout(function () {
+					toast.classList.add('opacity-0');
+					setTimeout(function () {
+						toast.classList.add('hidden');
+					}, 500);
+				}, 1800);
+			}
+
+			// Simple modal for adding attraction
+			var addModal = document.createElement('div');
+			addModal.id = 'add-attraction-modal';
+			addModal.className = 'hidden fixed inset-0 z-50 flex items-start justify-center pt-24';
+			addModal.innerHTML = '\n\
+\t\t\t\t<div class="absolute inset-0 bg-black bg-opacity-50"></div>\n\
+\t\t\t\t<div class="relative bg-white w-full max-w-md rounded-xl shadow-2xl p-6">\n\
+\t\t\t\t\t<h3 class="text-lg font-semibold mb-4">Add Attraction</h3>\n\
+\t\t\t\t\t<div class="space-y-3">\n\
+\t\t\t\t\t\t<div>\n\
+\t\t\t\t\t\t\t<label class="block text-sm font-medium text-gray-700 mb-1">Name</label>\n\
+\t\t\t\t\t\t\t<input id="add-name" type="text" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />\n\
+\t\t\t\t\t\t</div>\n\
+\t\t\t\t\t\t<div>\n\
+\t\t\t\t\t\t\t<label class="block text-sm font-medium text-gray-700 mb-1">Type</label>\n\
+\t\t\t\t\t\t\t<select id="add-type" class="w-full border rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">\n\
+\t\t\t\t\t\t\t\t<option value="">Select type...</option>\n\
+\t\t\t\t\t\t\t\t<option>Roller Coaster</option>\n\
+\t\t\t\t\t\t\t\t<option>Family Ride</option>\n\
+\t\t\t\t\t\t\t\t<option>Water Ride</option>\n\
+\t\t\t\t\t\t\t\t<option>Dark Ride</option>\n\
+\t\t\t\t\t\t\t</select>\n\
+\t\t\t\t\t\t</div>\n\
+\t\t\t\t\t\t<div>\n\
+\t\t\t\t\t\t\t<label class="block text-sm font-medium text-gray-700 mb-1">Location</label>\n\
+\t\t\t\t\t\t\t<select id="add-location" class="w-full border rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">\n\
+\t\t\t\t\t\t\t\t<option value="">Select location...</option>\n\
+\t\t\t\t\t\t\t\t<option>Thrill Zone</option>\n\
+\t\t\t\t\t\t\t\t<option>Central Plaza</option>\n\
+\t\t\t\t\t\t\t\t<option>Spooky Alley</option>\n\
+\t\t\t\t\t\t\t\t<option>Adventure Bay</option>\n\
+\t\t\t\t\t\t\t\t<option>Kids Zone</option>\n\
+\t\t\t\t\t\t\t</select>\n\
+\t\t\t\t\t\t</div>\n\
+\t\t\t\t\t\t<div id="add-error" class="hidden text-sm text-red-600"></div>\n\
+\t\t\t\t\t</div>\n\
+\t\t\t\t\t<div class="mt-5 flex justify-end space-x-2">\n\
+\t\t\t\t\t\t<button id="add-cancel" class="px-4 py-2 rounded-lg border">Cancel</button>\n\
+\t\t\t\t\t\t<button id="add-save" class="px-4 py-2 rounded-lg bg-indigo-600 text-white">Save</button>\n\
+\t\t\t\t\t</div>\n\
+\t\t\t\t</div>';
+			document.body.appendChild(addModal);
+
+			function openAddModal() {
+				addModal.classList.remove('hidden');
+			}
+			function closeAddModal() {
+				addModal.classList.add('hidden');
+			}
+
 			function finishLogin(user) {
 				userNameEl.textContent = user.name;
 				userInitialsEl.textContent = getInitials(user.name);
@@ -579,6 +582,8 @@
 				hide(loginPage);
 				show(dashboard);
 				sessionStorage.setItem('hm_session_user', JSON.stringify(user));
+				showToast('Signed in successfully');
+				loadAttractions();
 			}
 
 			if (loginForm) {
@@ -587,18 +592,10 @@
 					if (loginErrorEl) { loginErrorEl.classList.add('hidden'); loginErrorEl.textContent = ''; }
 					var email = (document.getElementById('email').value || '').trim().toLowerCase();
 					var password = (document.getElementById('password').value || '').trim();
-					fetch(API_BASE + '/auth_login.php', {
+					requestJson('/auth_login.php', {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
-						credentials: 'include',
 						body: JSON.stringify({ email: email, password: password })
-					}).then(function (res) {
-						var ct = res.headers.get('content-type') || '';
-						var toJson = ct.indexOf('application/json') !== -1 ? res.json() : res.text().then(function (t) { throw new Error(t || 'Server returned non-JSON'); });
-						if (!res.ok) {
-							return toJson.then(function (d) { throw new Error((d && d.error) || 'Login failed'); });
-						}
-						return toJson;
 					}).then(function (data) {
 						finishLogin(data.user);
 					}).catch(function (err) {
@@ -626,7 +623,7 @@
 
 			if (logoutBtn) {
 				logoutBtn.addEventListener('click', function () {
-					fetch(API_BASE + '/auth_logout.php', { method: 'POST', credentials: 'include' })
+					requestJson('/auth_logout.php', { method: 'POST' })
 						.finally(function () {
 							sessionStorage.removeItem('hm_session_user');
 							show(loginPage);
@@ -653,10 +650,116 @@
 				});
 			});
 
+			function renderAttractionRow(item) {
+				var tr = document.createElement('tr');
+				tr.innerHTML = '\n\
+\t\t\t\t\t\t<td class="px-6 py-4 whitespace-nowrap">\n\
+\t\t\t\t\t\t\t<div class="flex items-center">\n\
+\t\t\t\t\t\t\t\t<div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-lg flex items-center justify-center">\n\
+\t\t\t\t\t\t\t\t\t<i class="fas fa-bolt text-indigo-600"></i>\n\
+\t\t\t\t\t\t\t\t</div>\n\
+\t\t\t\t\t\t\t\t<div class="ml-4">\n\
+\t\t\t\t\t\t\t\t\t<div class="text-sm font-medium text-gray-900">' + item.name.replace(/</g,'&lt;') + '</div>\n\
+\t\t\t\t\t\t\t\t</div>\n\
+\t\t\t\t\t\t\t</div>\n\
+\t\t\t\t\t\t</td>\n\
+\t\t\t\t\t\t<td class="px-6 py-4 whitespace-nowrap">\n\
+\t\t\t\t\t\t\t<div class="text-sm text-gray-900">' + item.type.replace(/</g,'&lt;') + '</div>\n\
+\t\t\t\t\t\t</td>\n\
+\t\t\t\t\t\t<td class="px-6 py-4 whitespace-nowrap">\n\
+\t\t\t\t\t\t\t<div class="text-sm text-gray-900">' + item.location.replace(/</g,'&lt;') + '</div>\n\
+\t\t\t\t\t\t</td>\n\
+\t\t\t\t\t\t<td class="px-6 py-4 whitespace-nowrap">\n\
+\t\t\t\t\t\t\t<div class="text-sm text-gray-400">—</div>\n\
+\t\t\t\t\t\t</td>\n\
+\t\t\t\t\t\t<td class="px-6 py-4 whitespace-nowrap">\n\
+\t\t\t\t\t\t\t<div class="text-sm text-gray-400">—</div>\n\
+\t\t\t\t\t\t</td>\n\
+\t\t\t\t\t\t<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">\n\
+\t\t\t\t\t\t\t<button class="text-indigo-600 hover:text-indigo-900 mr-3" data-action="edit" data-id="' + item.id + '"><i class="fas fa-edit"></i></button>\n\
+\t\t\t\t\t\t\t<button class="text-red-600 hover:text-red-900" data-action="del" data-id="' + item.id + '"><i class="fas fa-trash"></i></button>\n\
+\t\t\t\t\t\t</td>';
+				return tr;
+			}
+
+			function loadAttractions() {
+				var tbody = document.getElementById('attractions-body');
+				if (!tbody) return;
+				tbody.innerHTML = '';
+				requestJson('/attractions_list.php')
+					.then(function (data) {
+						(data.items || []).forEach(function (item) {
+							tbody.appendChild(renderAttractionRow(item));
+						});
+					})
+					.catch(function (e) { console.warn(e); });
+			}
+
+			// Delegated events for edit/delete
+			document.addEventListener('click', function (e) {
+				var target = e.target.closest('button[data-action]');
+				if (!target) return;
+				var action = target.getAttribute('data-action');
+				var id = parseInt(target.getAttribute('data-id') || '0', 10);
+				if (!id) return;
+				if (action === 'del') {
+					if (!confirm('Delete this attraction?')) return;
+					requestJson('/attraction_delete.php', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ id: id })
+					}).then(function () { loadAttractions(); })
+					.catch(function (e) { alert('Delete failed: ' + (e.message || '')); });
+				}
+				if (action === 'edit') {
+					var name = prompt('Name');
+					if (name === null) return;
+					var type = prompt('Type');
+					if (type === null) return;
+					var location = prompt('Location');
+					if (location === null) return;
+					requestJson('/attraction_update.php', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ id: id, name: name, type: type, location: location })
+					}).then(function () { loadAttractions(); })
+					.catch(function (e) { alert('Update failed: ' + (e.message || '')); });
+				}
+			});
+
+			// Wire up Add Attraction button
+			var addBtn = document.getElementById('btn-add-attraction');
+			if (addBtn) {
+				addBtn.addEventListener('click', function () { openAddModal(); });
+			}
+			addModal.addEventListener('click', function (e) {
+				if (e.target === addModal || e.target.id === 'add-cancel') {
+					closeAddModal();
+				}
+			});
+			document.getElementById('add-save').addEventListener('click', function () {
+				var name = (document.getElementById('add-name').value || '').trim();
+				var type = (document.getElementById('add-type').value || '').trim();
+				var location = (document.getElementById('add-location').value || '').trim();
+				var err = document.getElementById('add-error');
+				if (!name || !type || !location) { if (err) { err.textContent = 'Please fill in all fields'; err.classList.remove('hidden'); } return; }
+				if (err) { err.classList.add('hidden'); err.textContent = ''; }
+				requestJson('/admin_attractions_create.php', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ name: name, type: type, location: location })
+				}).then(function () {
+					closeAddModal();
+					loadAttractions();
+					showToast('Attraction added');
+				}).catch(function (e) {
+					if (err) { err.textContent = 'Failed to add: ' + (e.message || ''); err.classList.remove('hidden'); }
+				});
+			});
+
 			// Auto-login if session exists
 			// Try backend session first, fallback to front-end sessionStorage
-			fetch(API_BASE + '/auth_me.php', { method: 'GET', credentials: 'include' })
-				.then(function (res) { return res.json(); })
+			requestJson('/auth_me.php')
 				.then(function (data) {
 					if (data && data.user) {
 						finishLogin(data.user);
