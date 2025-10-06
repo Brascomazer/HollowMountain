@@ -20,6 +20,22 @@ if (session_status() === PHP_SESSION_NONE) {
 	session_start();
 }
 
+// CORS for local dev (allow requests from static servers like 127.0.0.1:5500)
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if ($origin) {
+    header('Access-Control-Allow-Origin: ' . $origin);
+    header('Vary: Origin');
+} else {
+    header('Access-Control-Allow-Origin: *');
+}
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Credentials: true');
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
+
 // Ensure errors surface as JSON, not HTML
 error_reporting(E_ALL);
 ini_set('display_errors', '0');
